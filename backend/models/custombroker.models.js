@@ -37,4 +37,98 @@ cbInfo.login = (cbId, passwd, result) => {
     });
 }
 
+// Delete products
+cbInfo.update = (cbId, passwd, result) => {
+    sql.query("SELECT status FROM Custom_Broker WHERE CBId = " + cbId + " and passwd = " + passwd, (err, res) => {
+        if (err) {
+            console.log("Wrong credentials", err);
+            result(null, err);
+            return;
+        }
+        console.log(JSON.parse(JSON.stringify(res)))
+        if (Object.keys(res).length > 0){
+            if (res[0].status != 0){
+                sql.query('DELETE FROM product WHERE status = "A"', (err, res) => {
+                    if (err) {
+                        console.log("status updated", err);
+                        result(null, err);
+                        return;
+                    }
+                })
+            }
+        }
+        result(null);
+    })
+}
+
+// Ship tracking
+cbInfo.getShipInfo = (cbId, passwd, result) => {
+    sql.query("SELECT status FROM Custom_Broker WHERE CBId = " + cbId + " and passwd = " + passwd, (err, res) => {
+        if (err) {
+            console.log("Wrong credentials", err);
+            result(null, err);
+            return;
+        }
+        console.log(JSON.parse(JSON.stringify(res)))
+        if (Object.keys(res).length > 0){
+            if (res[0].status != 0){
+                sql.query('SELECT * FROM ship', (err, res) => {
+                    if (err) {
+                        // console.log("status updated", err);
+                        result(null, err);
+                        return;
+                    }
+                    result(null, res);
+                })
+            }
+        }
+    })
+}
+
+cbInfo.getSenderInfo = (cbId, passwd, result) => {
+    sql.query("SELECT status FROM Custom_Broker WHERE CBId = " + cbId + " and passwd = " + passwd, (err, res) => {
+        if (err) {
+            console.log("Wrong credentials", err);
+            result(null, err);
+            return;
+        }
+        console.log(JSON.parse(JSON.stringify(res)))
+        if (Object.keys(res).length > 0){
+            if (res[0].status != 0){
+                sql.query('SELECT senID, senName, senPhNo, product, price, src FROM sender', (err, res) => {
+                    if (err) {
+                        // console.log("status updated", err);
+                        result(null, err);
+                        return;
+                    }
+                    result(null, res);
+                })
+            }
+        }
+    })
+}
+
+cbInfo.getReceiverInfo = (cbId, passwd, result) => {
+    sql.query("SELECT status FROM Custom_Broker WHERE CBId = " + cbId + " and passwd = " + passwd, (err, res) => {
+        if (err) {
+            console.log("Wrong credentials", err);
+            result(null, err);
+            return;
+        }
+        console.log(JSON.parse(JSON.stringify(res)))
+        if (Object.keys(res).length > 0){
+            if (res[0].status != 0){
+                sql.query('SELECT recID, recName, recPhNo, product, price, dest FROM receiver', (err, res) => {
+                    if (err) {
+                        // console.log("status updated", err);
+                        result(null, err);
+                        return;
+                    }
+                    result(null, res);
+                })
+            }
+        }
+    })
+}
+
 module.exports = cbInfo;
